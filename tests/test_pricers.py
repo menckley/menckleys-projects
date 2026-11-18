@@ -1,32 +1,17 @@
 """Cohérence des trois pricers du notebook (BSM, binomial CRR, Monte Carlo) avec q≠0."""
 
-import ast
-import json
-from pathlib import Path
-
 import numpy as np
 import pytest
-from scipy.stats import norm
 
-NOTEBOOK = Path(__file__).resolve().parent.parent / "vanillaoption.ipynb"
+from pricing import binomial_tree_crr, black_scholes
 
 S0, K, T, R, SIGMA, Q = 100.0, 100.0, 1.0, 0.05, 0.2, 0.03
 
 
 @pytest.fixture(scope="module")
 def pricers():
-    """Charge uniquement les définitions de fonctions du notebook."""
-    nb = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
-    ns = {"np": np, "norm": norm}
-    for cell in nb["cells"]:
-        if cell["cell_type"] != "code":
-            continue
-        tree = ast.parse("".join(cell["source"]))
-        funcs = [n for n in tree.body if isinstance(n, ast.FunctionDef)]
-        if funcs:
-            module = ast.Module(body=funcs, type_ignores=[])
-            exec(compile(module, str(NOTEBOOK), "exec"), ns)  # noqa: S102 - code du notebook du dépôt
-    return ns["black_scholes"], ns["binomial_tree_crr"]
+    """Pricers du paquet `pricing` (importés par le notebook)."""
+    return black_scholes, binomial_tree_crr
 
 
 def test_put_call_parity_with_dividend(pricers):

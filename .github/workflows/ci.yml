@@ -23,6 +23,6 @@ jobs:
       - name: Installer les dépendances
         run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Lint (ruff)
-        run: ruff check tests
+        run: ruff check pricing tests
       - name: Tests (pytest)
         run: pytest
