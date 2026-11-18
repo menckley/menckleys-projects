@@ -1,0 +1,20 @@
+[project]
+name = "menckleys-projects"
+version = "0.1.0"
+description = "Pricers d'options européennes vanilles (BSM, arbre CRR, Monte Carlo)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy"]
+
+[dependency-groups]
+dev = ["pytest", "ruff"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
